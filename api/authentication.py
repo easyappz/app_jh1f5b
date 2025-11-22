@@ -4,7 +4,7 @@ from .models import MemberToken
 
 
 class MemberTokenAuthentication(BaseAuthentication):
-    keyword = "Token"
+    keyword = "Bearer"
 
     def authenticate(self, request):
         authorization = request.headers.get("Authorization")
