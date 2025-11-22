@@ -1,0 +1,37 @@
+paths:
+  /api/members/login/:
+    post:
+      summary: Вход участника
+      tags:
+        - members
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '../schema.yml#/components/schemas/MemberLoginRequest'
+            example:
+              username: "new_user"
+              password: "secret12"
+      responses:
+        '200':
+          description: Успешный вход
+          content:
+            application/json:
+              schema:
+                $ref: '../schema.yml#/components/schemas/MemberLoginResponse'
+              example:
+                token: "abc123token"
+                member:
+                  id: 1
+                  username: "new_user"
+                  created_at: "2025-01-01T12:00:00Z"
+        '400':
+          description: Ошибка авторизации
+          content:
+            application/json:
+              schema:
+                $ref: '../schema.yml#/components/schemas/ValidationError'
+              example:
+                non_field_errors:
+                  - "Неверное имя пользователя или пароль."

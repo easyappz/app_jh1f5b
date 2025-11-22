@@ -1,3 +1,5 @@
+import secrets
+
 from django.db import models
 from django.contrib.auth.hashers import make_password, check_password
 
@@ -24,3 +26,14 @@ class ChatMessage(models.Model):
 
     class Meta:
         ordering = ["created_at"]
+
+
+class MemberToken(models.Model):
+    key = models.CharField(max_length=40, unique=True)
+    member = models.OneToOneField(Member, on_delete=models.CASCADE, related_name="auth_token")
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def save(self, *args, **kwargs):
+        if not self.key:
+            self.key = secrets.token_hex(20)
+        super().save(*args, **kwargs)

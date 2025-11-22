@@ -1,0 +1,70 @@
+paths:
+  /api/members/me/:
+    get:
+      summary: Профиль текущего участника
+      tags:
+        - members
+      security:
+        - MemberTokenAuth: []
+      responses:
+        '200':
+          description: Данные профиля
+          content:
+            application/json:
+              schema:
+                $ref: '../schema.yml#/components/schemas/Member'
+              example:
+                id: 1
+                username: "new_user"
+                created_at: "2025-01-01T12:00:00Z"
+        '401':
+          description: Неавторизовано
+          content:
+            application/json:
+              schema:
+                $ref: '../schema.yml#/components/schemas/ErrorResponse'
+              example:
+                detail: "Недействительный токен."
+    put:
+      summary: Обновление профиля текущего участника
+      tags:
+        - members
+      security:
+        - MemberTokenAuth: []
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              $ref: '../schema.yml#/components/schemas/MemberProfileUpdateRequest'
+            example:
+              username: "updated_user"
+              password: "newsecret12"
+      responses:
+        '200':
+          description: Обновленный профиль
+          content:
+            application/json:
+              schema:
+                $ref: '../schema.yml#/components/schemas/Member'
+              example:
+                id: 1
+                username: "updated_user"
+                created_at: "2025-01-01T12:00:00Z"
+        '400':
+          description: Ошибка валидации
+          content:
+            application/json:
+              schema:
+                $ref: '../schema.yml#/components/schemas/ValidationError'
+              example:
+                username:
+                  - "Пользователь с таким именем уже существует."
+        '401':
+          description: Неавторизовано
+          content:
+            application/json:
+              schema:
+                $ref: '../schema.yml#/components/schemas/ErrorResponse'
+              example:
+                detail: "Недействительный токен."

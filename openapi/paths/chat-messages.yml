@@ -1,0 +1,77 @@
+paths:
+  /api/chat/messages/:
+    get:
+      summary: Список сообщений группового чата
+      tags:
+        - chat
+      security:
+        - MemberTokenAuth: []
+      responses:
+        '200':
+          description: Список сообщений
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '../schema.yml#/components/schemas/ChatMessage'
+              example:
+                - id: 1
+                  member: "user1"
+                  content: "Привет!"
+                  created_at: "2025-01-01T12:00:00Z"
+                - id: 2
+                  member: "user2"
+                  content: "Здравствуйте!"
+                  created_at: "2025-01-01T12:01:00Z"
+        '401':
+          description: Неавторизовано
+          content:
+            application/json:
+              schema:
+                $ref: '../schema.yml#/components/schemas/ErrorResponse'
+              example:
+                detail: "Недействительный токен."
+    post:
+      summary: Отправка сообщения в групповой чат
+      tags:
+        - chat
+      security:
+        - MemberTokenAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '../schema.yml#/components/schemas/ChatMessageCreateRequest'
+            example:
+              content: "Новое сообщение"
+      responses:
+        '201':
+          description: Сообщение создано
+          content:
+            application/json:
+              schema:
+                $ref: '../schema.yml#/components/schemas/ChatMessage'
+              example:
+                id: 3
+                member: "user1"
+                content: "Новое сообщение"
+                created_at: "2025-01-01T12:05:00Z"
+        '400':
+          description: Ошибка валидации
+          content:
+            application/json:
+              schema:
+                $ref: '../schema.yml#/components/schemas/ValidationError'
+              example:
+                content:
+                  - "Сообщение не может быть пустым."
+        '401':
+          description: Неавторизовано
+          content:
+            application/json:
+              schema:
+                $ref: '../schema.yml#/components/schemas/ErrorResponse'
+              example:
+                detail: "Недействительный токен."

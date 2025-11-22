@@ -4,43 +4,104 @@ info:
   version: 1.0.0
   description: API documentation for easyapp
 paths:
-  /api/hello/:
-    get:
-      operationId: api_hello_retrieve
-      description: Get a hello world message
-      tags:
-      - api
-      security:
-      - cookieAuth: []
-      - basicAuth: []
-      - {}
-      responses:
-        '200':
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Message'
-          description: ''
+  /api/members/register/:
+    $ref: './paths/members-register.yml#/paths/~1api~1members~1register~1'
+  /api/members/login/:
+    $ref: './paths/members-login.yml#/paths/~1api~1members~1login~1'
+  /api/members/me/:
+    $ref: './paths/members-me.yml#/paths/~1api~1members~1me~1'
+  /api/chat/messages/:
+    $ref: './paths/chat-messages.yml#/paths/~1api~1chat~1messages~1'
 components:
   schemas:
-    Message:
+    Member:
       type: object
       properties:
-        message:
+        id:
+          type: integer
+        username:
           type: string
-          maxLength: 200
-        timestamp:
+        created_at:
           type: string
           format: date-time
-          readOnly: true
       required:
-      - message
-      - timestamp
+        - id
+        - username
+        - created_at
+    ChatMessage:
+      type: object
+      properties:
+        id:
+          type: integer
+        member:
+          type: string
+        content:
+          type: string
+        created_at:
+          type: string
+          format: date-time
+      required:
+        - id
+        - member
+        - content
+        - created_at
+    MemberRegisterRequest:
+      type: object
+      properties:
+        username:
+          type: string
+        password:
+          type: string
+      required:
+        - username
+        - password
+    MemberLoginRequest:
+      type: object
+      properties:
+        username:
+          type: string
+        password:
+          type: string
+      required:
+        - username
+        - password
+    MemberLoginResponse:
+      type: object
+      properties:
+        token:
+          type: string
+        member:
+          $ref: '#/components/schemas/Member'
+      required:
+        - token
+        - member
+    MemberProfileUpdateRequest:
+      type: object
+      properties:
+        username:
+          type: string
+        password:
+          type: string
+    ChatMessageCreateRequest:
+      type: object
+      properties:
+        content:
+          type: string
+      required:
+        - content
+    ErrorResponse:
+      type: object
+      properties:
+        detail:
+          type: string
+    ValidationError:
+      type: object
+      additionalProperties:
+        type: array
+        items:
+          type: string
   securitySchemes:
-    basicAuth:
+    MemberTokenAuth:
       type: http
-      scheme: basic
-    cookieAuth:
-      type: apiKey
-      in: cookie
-      name: sessionid
+      scheme: bearer
+      bearerFormat: Token

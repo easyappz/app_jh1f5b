@@ -1,0 +1,35 @@
+paths:
+  /api/members/register/:
+    post:
+      summary: Регистрация участника
+      tags:
+        - members
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '../schema.yml#/components/schemas/MemberRegisterRequest'
+            example:
+              username: "new_user"
+              password: "secret12"
+      responses:
+        '201':
+          description: Участник успешно создан
+          content:
+            application/json:
+              schema:
+                $ref: '../schema.yml#/components/schemas/Member'
+              example:
+                id: 1
+                username: "new_user"
+                created_at: "2025-01-01T12:00:00Z"
+        '400':
+          description: Ошибка валидации
+          content:
+            application/json:
+              schema:
+                $ref: '../schema.yml#/components/schemas/ValidationError'
+              example:
+                username:
+                  - "Пользователь с таким именем уже существует."
