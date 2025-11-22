@@ -19,6 +19,6 @@ export async function login({ username, password }) {
 export function logout() {
   if (typeof window !== 'undefined' && window.localStorage) {
     window.localStorage.removeItem('authToken');
-    window.localStorage.removeItem('member');
+    window.localStorage.removeItem('currentMember');
   }
 }
